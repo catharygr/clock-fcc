@@ -37,6 +37,7 @@ function App() {
         break;
     }
   }
+
   return (
     <main className="container">
       <h1>25 + 5 Clock</h1>
@@ -61,7 +62,7 @@ function App() {
               Abajo
             </button>
             <p id="session-length">{sessionLength}</p>
-            <button onClick={handleCockLentgth} id="session-increment">
+            <button onClick={handleClockLentgth} id="session-increment">
               Arriba
             </button>
           </div>
