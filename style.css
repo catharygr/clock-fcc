@@ -58,6 +58,7 @@ button {
 
 button:hover {
   background-color: brown;
+  color: aliceblue;
 }
 
 .display {
