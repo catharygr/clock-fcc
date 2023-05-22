@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import beep from "./beep.wav";
 import "../style.css";
 
 function App() {
@@ -18,7 +19,12 @@ function App() {
     setIsBreak(false);
     clearInterval(interval.current);
     setIsStartClock(true);
+    audioRef.current.pause();
+    audioRef.current.currentTime = 0;
   }
+  const interval = useRef(null);
+  const sessionLengthSec = useRef(sessionLength * 60);
+  const audioRef = useRef(beep);
 
   function handleClockLentgth(e) {
     const id = e.target.id;
@@ -52,8 +58,6 @@ function App() {
     }
   }
 
-  const interval = useRef(null);
-  const sessionLengthSec = useRef(sessionLength * 60);
   function startClock() {
     sessionLengthSec.current -= 1;
     let isBreakTrue = isBreak;
@@ -69,12 +73,14 @@ function App() {
         setIsBreak(true);
         sessionLengthSec.current = breakLength * 60;
         isBreakTrue = true;
+        audioRef.current.play();
       }
       if (sessionLengthSec.current < 0 && isBreakTrue) {
         setTimerLaber("Session");
         setIsBreak(false);
         sessionLengthSec.current = sessionLength * 60;
         isBreakTrue = false;
+        audioRef.current.play();
       }
     }, 1000);
     setIsStartClock(false);
@@ -137,6 +143,7 @@ function App() {
           </button>
         </div>
       </div>
+      <audio ref={audioRef} id="beep" src={beep}></audio>
     </main>
   );
 }
