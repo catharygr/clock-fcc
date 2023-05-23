@@ -45,12 +45,15 @@ function App() {
         break;
       case "session-decrement":
         setSessionLength(sesLongDecrem);
+        sessionLengthSec.current = sesLongDecrem * 60;
         setTimeLeft(
           sesLongDecrem < 10 ? `0${sesLongDecrem}:00` : `${sesLongDecrem}:00`
         );
         break;
       case "session-increment":
         setSessionLength(sesLongIncrem);
+        sessionLengthSec.current = sesLongIncrem * 60;
+
         setTimeLeft(
           sesLongIncrem < 10 ? `0${sesLongIncrem}` : `${sesLongIncrem}:00`
         );
@@ -61,6 +64,7 @@ function App() {
   function startClock() {
     sessionLengthSec.current -= 1;
     let isBreakTrue = isBreak;
+
     interval.current = setInterval(() => {
       let min = Math.floor(sessionLengthSec.current / 60);
       let sec = sessionLengthSec.current % 60;
@@ -68,26 +72,30 @@ function App() {
       if (sec < 10) sec = `0${sec}`;
       setTimeLeft(min + ":" + sec);
       sessionLengthSec.current -= 1;
+
+      if (sessionLengthSec.current < 0) audioRef.current.play();
+
       if (sessionLengthSec.current < 0 && !isBreakTrue) {
         setTimerLaber("Break");
         setIsBreak(true);
         sessionLengthSec.current = breakLength * 60;
         isBreakTrue = true;
-        audioRef.current.play();
+        // audioRef.current.play();
       }
+
       if (sessionLengthSec.current < 0 && isBreakTrue) {
         setTimerLaber("Session");
         setIsBreak(false);
         sessionLengthSec.current = sessionLength * 60;
         isBreakTrue = false;
-        audioRef.current.play();
+        // audioRef.current.play();
       }
     }, 1000);
     setIsStartClock(false);
   }
 
   function stopClock() {
-    sessionLengthSec.current -= 1;
+    // sessionLengthSec.current -= 1;
     clearInterval(interval.current);
     setIsStartClock(true);
   }
@@ -143,7 +151,7 @@ function App() {
           </button>
         </div>
       </div>
-      <audio ref={audioRef} id="beep" src={beep}></audio>
+      <audio ref={audioRef} type="audio/wav" id="beep" src={beep}></audio>
     </main>
   );
 }
